@@ -14,7 +14,7 @@
           <izz>0.150214768</izz>
         </inertia>
       </inertial>
-      <collision name="collision">
+      <collision name="collision1">
         <pose>0 0 0 0 0 1.570796</pose>
         <geometry>
           <box>
@@ -22,7 +22,7 @@
           </box>
         </geometry>
       </collision>
-      <collision name="collision">
+      <collision name="collision2">
         <pose>0 0 0 0 1.570796 0</pose>
         <geometry>
           <mesh>

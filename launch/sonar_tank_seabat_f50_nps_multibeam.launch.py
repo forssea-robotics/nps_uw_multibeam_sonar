@@ -16,7 +16,7 @@ def generate_launch_description():
     # Gazebo Server
     gzserver_launch_file = os.path.join(pkg_gazebo_ros, 'launch', 'gzserver.launch.py')
     world_file = os.path.join(get_package_share_directory(
-        'nps_uw_multibeam_sonar'), 'worlds', 'sonar_tank_oculus_m1200d_nps_multibeam_customSDFTag.world')
+        'nps_uw_multibeam_sonar'), 'worlds', 'sonar_tank_seabat_f50_nps_multibeam.world')
     gzserver_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(gzserver_launch_file), launch_arguments={
             'world': world_file, 'verbose': 'true'}.items())
@@ -37,7 +37,7 @@ def generate_launch_description():
     image_view_sonar_node = Node(
         package="image_view",
         arguments=["--ros-args --remap image:=/sonar_image"],
-        parameters=[{"window_name": "oculus_m1200d", "autosize": True, "filename_format": "/tmp/SonarImage_capture_%04i.jpg"}],
+        parameters=[{"window_name": "seabat_f50", "autosize": True, "filename_format": "/tmp/SonarImage_capture_%04i.jpg"}],
         executable="image_view",
         output="screen",
         name="image_view_sonar"
