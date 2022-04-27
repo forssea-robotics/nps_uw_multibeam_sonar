@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="blueview_p900" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <!-- Generates a link element with Blueview P900 physical & visual characteristics -->
   <xacro:macro name="multibeam_blueview_p900_link" params="name scale">

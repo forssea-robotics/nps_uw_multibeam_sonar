@@ -21,7 +21,7 @@ def generate_launch_description():
     # Gazebo Server
     gzserver_launch_file = os.path.join(pkg_gazebo_ros, 'launch', 'gzserver.launch.py')
     world_file = os.path.join(get_package_share_directory(
-        'nps_uw_multibeam_sonar'), 'worlds', 'sonar_vase_blueview_p900_nps_multibeam.world')
+        'nps_uw_multibeam_sonar'), 'worlds', 'local_search.world')
     gzserver_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(gzserver_launch_file), launch_arguments={
             'world': world_file, 'verbose': 'verbose'}.items())
@@ -31,13 +31,14 @@ def generate_launch_description():
     gzclient_launch = IncludeLaunchDescription(PythonLaunchDescriptionSource(gzclient_launch_file))
     
     # Retrieve sonar parameters
-    config_file = os.path.join(pkg_share, 'config/blueview_p900_vase.yaml')
+    config_file = os.path.join(pkg_share, 'config/blueview_p900_local_ray.yaml')
     with open(config_file, mode='r') as file:
         params = yaml.full_load(file)
         
     # Generate sonar model
     doc = xacro.process_file(default_model_path, mappings={'standalone': params['standalone'],
                                                             'name': params['sonar_name'],
+                                                            'gpu_ray': params['gpu_ray'],
                                                             'scale': params['sonar_scale'],
                                                             'debug': params['debug'],
                                                             'sonar_image_topic': params['sonar_image_topic'],
@@ -46,11 +47,11 @@ def generate_launch_description():
                                                             'raySkips': params['raySkips'],
                                                             'sensorGain': params['sensorGain'],
                                                             'plotScaler': params['plotScaler'],
+                                                            'fidelity': params['fidelity'],
                                                             'writeLog': params['writeLog'],
                                                             'writeFrameInterval': params['writeFrameInterval'],
-                                                            'artificialVehicleVibration': params['artificialVehicleVibration'],
-                                                            'constantReflectivity': params['constantReflectivity'],
-                                                            'reflectivityDatabaseFile': params['reflectivityDatabaseFile'],
+                                                            'gaussian_noise_mean': params['gaussian_noise_mean'],
+                                                            'gaussian_noise_stddev': params['gaussian_noise_stddev'],
                                                             'ray_visual': params['ray_visual']
                                                            })
     robot_desc = doc.toprettyxml(indent='  ')

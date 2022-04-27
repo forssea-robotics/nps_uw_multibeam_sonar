@@ -137,7 +137,7 @@ install(
 )
 
 # for launch
-install(DIRECTORY launch worlds urdf models
+install(DIRECTORY launch config worlds urdf models
         DESTINATION share/${PROJECT_NAME}
         PATTERN "*~" EXCLUDE)
 
