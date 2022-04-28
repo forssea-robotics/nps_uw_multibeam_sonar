@@ -309,9 +309,23 @@ void NpsGazeboRosMultibeamSonarRay::Load(sensors::SensorPtr _sensor,
   //           boost::bind(&NpsGazeboRosMultibeamSonarRay::Advertise, this));
   // GazeboRosCameraUtils::Load(_sensor, _sdf);
 
+  static const rmw_qos_profile_t my_custom_qos_profile =
+  {
+      RMW_QOS_POLICY_HISTORY_KEEP_LAST,
+      5,
+      RMW_QOS_POLICY_RELIABILITY_RELIABLE,
+      RMW_QOS_POLICY_DURABILITY_TRANSIENT_LOCAL,
+      RMW_QOS_DEADLINE_DEFAULT,
+      RMW_QOS_LIFESPAN_DEFAULT,
+      RMW_QOS_POLICY_LIVELINESS_SYSTEM_DEFAULT,
+      RMW_QOS_LIVELINESS_LEASE_DURATION_DEFAULT,
+      false
+  };
+  // rmw_qos_profile_sensor_data
+
   auto qos = rclcpp::QoS(
-    rclcpp::QoSInitialization::from_rmw(rmw_qos_profile_sensor_data),
-    rmw_qos_profile_sensor_data);
+    rclcpp::QoSInitialization::from_rmw(my_custom_qos_profile),
+    my_custom_qos_profile);
   
   // Init publishers and subscribers
   this->normal_image_pub_ = this->ros_node_->create_publisher<sensor_msgs::msg::Image>(
