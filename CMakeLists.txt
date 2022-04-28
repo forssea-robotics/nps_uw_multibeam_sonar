@@ -93,13 +93,20 @@ ament_target_dependencies(nps_multibeam_sonar_ros_plugin
   CUDA
 )
 list(APPEND SENSOR_ROS_PLUGINS_LIST nps_multibeam_sonar_ros_plugin)
+
 add_library(nps_multibeam_sonar_ray_ros_plugin
+            SHARED
             src/gazebo_multibeam_sonar_ray_based.cpp
             src/sonar_calculation_cuda.cu
             src/MaterialSwitcher.cc  # From gazebo/rendering/selection_buffer
             src/SelectionBuffer.cc  # From gazebo/rendering/selection_buffer
             src/SelectionRenderListener.cc  # From gazebo/rendering/selection_buffer
   )
+target_include_directories(
+  nps_multibeam_sonar_ray_ros_plugin
+    PUBLIC
+    include
+)
 set_target_properties(nps_multibeam_sonar_ray_ros_plugin
                       PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 target_link_libraries(nps_multibeam_sonar_ray_ros_plugin
