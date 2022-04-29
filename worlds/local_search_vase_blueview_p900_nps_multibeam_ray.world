@@ -51,10 +51,10 @@
     </light>
 
     <!-- Virtual NED frame -->
-    <include>
+    <!-- <include>
       <uri>model://ned_frame</uri>
       <pose>0 0 0 0 0 0</pose>
-    </include>
+    </include> -->
 
     <!-- Heightmap -->
     <include>
@@ -84,7 +84,7 @@
       <static>true</static>
     </include>
 
-    <plugin name="sc_interface" filename="libuuv_sc_ros_interface_plugin.so"/>
+    <!-- <plugin name="sc_interface" filename="libuuv_sc_ros_interface_plugin.so"/> -->
 
   </world>
 </sdf>
