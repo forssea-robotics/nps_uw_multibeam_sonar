@@ -314,7 +314,7 @@ void NpsGazeboRosMultibeamSonarRay::Load(sensors::SensorPtr _sensor,
       RMW_QOS_POLICY_HISTORY_KEEP_LAST,
       5,
       RMW_QOS_POLICY_RELIABILITY_RELIABLE,
-      RMW_QOS_POLICY_DURABILITY_TRANSIENT_LOCAL,
+      RMW_QOS_POLICY_DURABILITY_VOLATILE,
       RMW_QOS_DEADLINE_DEFAULT,
       RMW_QOS_LIFESPAN_DEFAULT,
       RMW_QOS_POLICY_LIVELINESS_SYSTEM_DEFAULT,
@@ -342,68 +342,7 @@ void NpsGazeboRosMultibeamSonarRay::Load(sensors::SensorPtr _sensor,
 
   this->VelodyneGpuLaserPointCloud = this->ros_node_->create_subscription<sensor_msgs::msg::PointCloud2>(
       this->point_cloud_topic_name_, qos, std::bind(&NpsGazeboRosMultibeamSonarRay::UpdatePointCloud, this, std::placeholders::_1));
-  // Spin up the queue helper thread.
-  // this->pointCloudSubQueueThread = std::thread(std::bind(
-  //     &NpsGazeboRosMultibeamSonarRay::pointCloudSubThread, this));
 }
-
-// void NpsGazeboRosMultibeamSonarRay::pointCloudSubThread()
-// {
-//   static const double timeout = 0.01;
-//   while (rclcpp::ok())
-//   {
-//     this->pointCloudSubQueue.callAvailable(ros::WallDuration(timeout));
-//   }
-// }
-
-// void NpsGazeboRosMultibeamSonarRay::Advertise()
-// {
-//   // Publisher for point cloud
-//   ros::SubscribeOptions so =
-//   ros::SubscribeOptions::create<sensor_msgs::PointCloud2>(
-//       "/" + this->point_cloud_topic_name_, 1,
-//       boost::bind(&NpsGazeboRosMultibeamSonarRay::UpdatePointCloud, this, _1),
-//       ros::VoidPtr(), &this->pointCloudSubQueue);
-//   this->VelodyneGpuLaserPointCloud = this->rosnode_->subscribe(so);
-//   // Spin up the queue helper thread.
-//   this->pointCloudSubQueueThread = std::thread(std::bind(
-//       &NpsGazeboRosMultibeamSonarRay::pointCloudSubThread, this));
-
-//   ros::AdvertiseOptions point_cloud_ao =
-//     ros::AdvertiseOptions::create<sensor_msgs::PointCloud2>(
-//       this->point_cloud_topic_name_, 1,
-//       boost::bind(&NpsGazeboRosMultibeamSonarRay::PointCloudConnect, this),
-//       boost::bind(&NpsGazeboRosMultibeamSonarRay::PointCloudDisconnect, this),
-//       ros::VoidPtr(), &this->camera_queue_);
-//   this->point_cloud_pub_ = this->rosnode_->advertise(point_cloud_ao);
-
-//   // Publisher for normal image
-//   ros::AdvertiseOptions normal_image_ao =
-//     ros::AdvertiseOptions::create<sensor_msgs::Image>(
-//       "/" + this->point_cloud_topic_name_ + "_normal_image", 1,
-//       boost::bind(&NpsGazeboRosMultibeamSonarRay::SonarImageConnect, this),
-//       boost::bind(&NpsGazeboRosMultibeamSonarRay::SonarImageDisconnect, this),
-//       ros::VoidPtr(), &this->camera_queue_);
-//   this->normal_image_pub_ = this->rosnode_->advertise(normal_image_ao);
-
-//   // Publisher for sonar raw data
-//   ros::AdvertiseOptions sonar_image_raw_ao =
-//     ros::AdvertiseOptions::create<acoustic_msgs::SonarImage>(
-//       this->sonar_image_raw_topic_name_, 1,
-//       boost::bind(&NpsGazeboRosMultibeamSonarRay::SonarImageConnect, this),
-//       boost::bind(&NpsGazeboRosMultibeamSonarRay::SonarImageDisconnect, this),
-//       ros::VoidPtr(), &this->camera_queue_);
-//   this->sonar_image_raw_pub_ = this->rosnode_->advertise(sonar_image_raw_ao);
-
-//   // Publisher for sonar image
-//   ros::AdvertiseOptions sonar_image_ao =
-//     ros::AdvertiseOptions::create<sensor_msgs::Image>(
-//       this->sonar_image_topic_name_, 1,
-//       boost::bind(&NpsGazeboRosMultibeamSonarRay::SonarImageConnect, this),
-//       boost::bind(&NpsGazeboRosMultibeamSonarRay::SonarImageDisconnect, this),
-//       ros::VoidPtr(), &this->camera_queue_);
-//   this->sonar_image_pub_ = this->rosnode_->advertise(sonar_image_ao);
-// }
 
 void NpsGazeboRosMultibeamSonarRay::PointCloudConnect()
 {

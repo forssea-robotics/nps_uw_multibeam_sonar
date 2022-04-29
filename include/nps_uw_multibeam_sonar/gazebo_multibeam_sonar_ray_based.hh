@@ -122,9 +122,6 @@ namespace gazebo
     // overload with our own
     private: common::Time sensor_update_time_;
 
-    /// \brief Advertise
-    public: virtual void Advertise();
-
     /// \brief Keep track of number of connctions for plugin outputs
     private: int point_cloud_connect_count_;
     private: int sonar_image_connect_count_;

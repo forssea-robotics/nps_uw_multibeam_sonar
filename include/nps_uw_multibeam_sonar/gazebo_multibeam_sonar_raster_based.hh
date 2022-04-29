@@ -100,9 +100,6 @@ namespace gazebo
     /// \brief A list of fiducials tracked by this camera.
     public: std::set<std::string> fiducials;
 
-    /// \brief Advertise point cloud and depth image
-    // public: virtual void Advertise();
-
     /// \brief Update the controller
     protected: virtual void OnNewDepthFrame(const float *_image,
                                             unsigned int _width,
