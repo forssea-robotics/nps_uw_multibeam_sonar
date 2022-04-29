@@ -9,7 +9,8 @@ A ROS2 migration of the [nps_uw_multibeam_sonar package](https://github.com/Fiel
 # Dependencies
 
 * ros-galactic-image-pipeline
-* [ROS2 velodyne simulator](https://github.com/ToyotaResearchInstitute/velodyne_simulator)
+* [ROS2 velodyne simulator](https://github.com/forssea-robotics/velodyne_simulator)
+* [ROS2 hydrographic messages](https://github.com/forssea-robotics/hydrographic_msgs)
 
 # nps_uw_multibeam_sonar
 Multibeam sonar Gazebo plugin with NVIDIA Cuda library 
