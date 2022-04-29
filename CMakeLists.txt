@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.23)
 project(nps_uw_multibeam_sonar LANGUAGES CUDA CXX)
 
 ## Make sure you have installed CUDA and include in paths
