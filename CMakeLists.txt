@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 3.22)
 project(nps_uw_multibeam_sonar LANGUAGES CUDA CXX)
 
 ## Make sure you have installed CUDA and include in paths
@@ -20,6 +20,7 @@ else()
 endif()
 
 find_package(ament_cmake REQUIRED)
+find_package(ament_index_cpp REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(gazebo_plugins REQUIRED)
@@ -70,11 +71,14 @@ target_include_directories(
 )
 set_target_properties(nps_multibeam_sonar_ros_plugin
                       PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+set_property(TARGET nps_multibeam_sonar_ros_plugin PROPERTY CUDA_ARCHITECTURES 50 52 72)
 target_link_libraries(nps_multibeam_sonar_ros_plugin
                       ${OGRE_LIBRARIES} ${ament_LIBRARIES}
                       ${CUDA_LIBRARIES}
                       ${CUDA_CUFFT_LIBRARIES})
 ament_target_dependencies(nps_multibeam_sonar_ros_plugin
+  ament_cmake
+  ament_index_cpp
   tf2
   cv_bridge
   gazebo_plugins
@@ -105,6 +109,9 @@ target_include_directories(
 )
 set_target_properties(nps_multibeam_sonar_ray_ros_plugin
                       PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+
+	      
+set_property(TARGET nps_multibeam_sonar_ray_ros_plugin PROPERTY CUDA_ARCHITECTURES 50 52 72)
 target_link_libraries(nps_multibeam_sonar_ray_ros_plugin
                       ${OGRE_LIBRARIES} ${ament_LIBRARIES}
                       ${CUDA_LIBRARIES} ${PCL_LIBRARIES}
