@@ -30,13 +30,6 @@ def generate_launch_description():
     gzclient_launch_file = os.path.join(pkg_gazebo_ros, 'launch', 'gzclient.launch.py')
     gzclient_launch = IncludeLaunchDescription(PythonLaunchDescriptionSource(gzclient_launch_file))
     
-    # Full gazebo rendering
-    # gz = ExecuteProcess(
-    # cmd=['gazebo', '--verbose', '-s', 'libgazebo_ros_init.so', '-s', 'libgazebo_ros_factory.so',
-    #     world_file],
-    # output='screen'
-    # )
-    
     # Retrieve sonar parameters
     config_file = os.path.join(pkg_share, 'config/blueview_p900_shipwreck.yaml')
     with open(config_file, mode='r') as file:
@@ -85,7 +78,9 @@ def generate_launch_description():
     # Image viewer from sonar image
     image_view_sonar_node = Node(
         package="image_view",
-        arguments=["--ros-args --remap image:=/" + params['sonar_image_topic']],
+        remappings=[
+                 ('image', params['sonar_image_topic']),
+             ],
         parameters=[{"window_name": params['sonar_name'], "autosize": True, "filename_format": "/tmp/SonarImage_capture_%04i.jpg"}],
         executable="image_view",
         output="screen",

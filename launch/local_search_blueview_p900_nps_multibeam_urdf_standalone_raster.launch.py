@@ -78,7 +78,9 @@ def generate_launch_description():
     # Image viewer from sonar image
     image_view_sonar_node = Node(
         package="image_view",
-        arguments=["--ros-args --remap image:=/" + params['sonar_image_topic']],
+        remappings=[
+                 ('image', params['sonar_image_topic']),
+             ],
         parameters=[{"window_name": params['sonar_name'], "autosize": True, "filename_format": "/tmp/SonarImage_capture_%04i.jpg"}],
         executable="image_view",
         output="screen",
