@@ -70,8 +70,10 @@
           </noise>
         </ray>
 
-        <plugin name="ray_sonar_sensor" filename="libgazebo_ros_velodyne_gpu_laser.so">
-           <topicName>multibeam_sonar_point_cloud</topicName>
+        <plugin name="ray_sonar_sensor" filename="libgazebo_ros_velodyne_laser.so">
+            <ros>
+              <argument>~/out:=multibeam_sonar_point_cloud</argument>
+            </ros>
            <static_reference_frame>forward_sonar_optical_link</static_reference_frame>
            <organize_cloud>true</organize_cloud>
            <min_range>0.2</min_range>

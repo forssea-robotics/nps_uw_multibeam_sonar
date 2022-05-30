@@ -63,7 +63,7 @@
           <bandwidth>265.5e3</bandwidth>
           <soundSpeed>1500</soundSpeed>
           <sourceLevel>150</sourceLevel>
-          <maxDistance>10</maxDistance>
+          <maxDistance>1.2</maxDistance>
           <constantReflectivity>false</constantReflectivity>
           <!-- custom SDF Tag works when constantReflectivity is false -->
           <customSDFTagReflectivity>true</customSDFTagReflectivity>

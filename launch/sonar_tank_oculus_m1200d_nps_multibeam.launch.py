@@ -36,7 +36,7 @@ def generate_launch_description():
     # Image viewer from sonar image
     image_view_sonar_node = Node(
         package="image_view",
-        arguments=["--ros-args --remap /sonar_image:=/image"],
+        arguments=["--ros-args --remap /image:=/sonar_image"],
         parameters=[{"window_name": "oculus_m1200d", "autosize": True, "filename_format": "/tmp/SonarImage_capture_%04i.jpg", "gui": True}],
         executable="image_view",
         output="screen",

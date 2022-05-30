@@ -23,6 +23,7 @@ find_package(ament_cmake REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(gazebo_plugins REQUIRED)
+find_package(velodyne_gazebo_plugins REQUIRED)
 find_package(acoustic_msgs REQUIRED)
 find_package(xacro REQUIRED)
 find_package(gazebo REQUIRED)
@@ -70,6 +71,7 @@ target_include_directories(
 )
 set_target_properties(nps_multibeam_sonar_ros_plugin
                       PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+set_property(TARGET nps_multibeam_sonar_ros_plugin PROPERTY CUDA_ARCHITECTURES all-major)
 target_link_libraries(nps_multibeam_sonar_ros_plugin
                       ${OGRE_LIBRARIES} ${ament_LIBRARIES}
                       ${CUDA_LIBRARIES}
@@ -105,6 +107,7 @@ target_include_directories(
 )
 set_target_properties(nps_multibeam_sonar_ray_ros_plugin
                       PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+set_property(TARGET nps_multibeam_sonar_ray_ros_plugin PROPERTY CUDA_ARCHITECTURES all-major)
 target_link_libraries(nps_multibeam_sonar_ray_ros_plugin
                       ${OGRE_LIBRARIES} ${ament_LIBRARIES}
                       ${CUDA_LIBRARIES} ${PCL_LIBRARIES}

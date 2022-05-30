@@ -19,23 +19,23 @@ def generate_launch_description():
     default_model_path = os.path.join(pkg_share, 'urdf/multibeam_sonar_blueview_p900.xacro')
 
     # Gazebo Server
-    # gzserver_launch_file = os.path.join(pkg_gazebo_ros, 'launch', 'gzserver.launch.py')
+    gzserver_launch_file = os.path.join(pkg_gazebo_ros, 'launch', 'gzserver.launch.py')
     world_file = os.path.join(get_package_share_directory(
         'nps_uw_multibeam_sonar'), 'worlds', 'sonar_shipwreck_blueview_p900_nps_multibeam.world')
-    # gzserver_launch = IncludeLaunchDescription(
-    #     PythonLaunchDescriptionSource(gzserver_launch_file), launch_arguments={
-    #         'world': world_file, 'verbose': 'verbose'}.items())
+    gzserver_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(gzserver_launch_file), launch_arguments={
+            'world': world_file, 'verbose': 'verbose'}.items())
 
     # Gazebo Client
-    # gzclient_launch_file = os.path.join(pkg_gazebo_ros, 'launch', 'gzclient.launch.py')
-    # gzclient_launch = IncludeLaunchDescription(PythonLaunchDescriptionSource(gzclient_launch_file))
+    gzclient_launch_file = os.path.join(pkg_gazebo_ros, 'launch', 'gzclient.launch.py')
+    gzclient_launch = IncludeLaunchDescription(PythonLaunchDescriptionSource(gzclient_launch_file))
     
     # Full gazebo rendering
-    gz = ExecuteProcess(
-    cmd=['gazebo', '--verbose', '-s', 'libgazebo_ros_init.so', '-s', 'libgazebo_ros_factory.so',
-        world_file],
-    output='screen'
-    )
+    # gz = ExecuteProcess(
+    # cmd=['gazebo', '--verbose', '-s', 'libgazebo_ros_init.so', '-s', 'libgazebo_ros_factory.so',
+    #     world_file],
+    # output='screen'
+    # )
     
     # Retrieve sonar parameters
     config_file = os.path.join(pkg_share, 'config/blueview_p900_shipwreck.yaml')
@@ -101,7 +101,8 @@ def generate_launch_description():
                               description='Use simulation (Gazebo) clock if true'),
         DeclareLaunchArgument(name='model', default_value=default_model_path),
         DeclareLaunchArgument(name='verbose', default_value="true"),
-        gz, 
+        gzserver_launch,
+        gzclient_launch,
         sonar_state_publisher_node,
         spawn_entity,
         static_tf_node,

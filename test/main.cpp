@@ -81,12 +81,12 @@ int main (int argc, char *argv[])
   int ray_nAzimuthRays = 1;
   float* elevation_angles = new float[nRays];
 
-  double verticalFOV = 10; 
-  double sonarFreq = 900e3;
-  double bandwidth = 29.5e6;
+  double verticalFOV = 12; 
+  double sonarFreq = 2100e3;
+  double bandwidth = 265.5e3;
   double soundSpeed = 1500;
-  double maxDistance = 60;
-  double sourceLevel = 220;
+  double maxDistance = 1.2;
+  double sourceLevel = 150;
   float raySkips = 1;
   float mu = 1e-3;
   double absorption = 0.0354;  // [dB/m]

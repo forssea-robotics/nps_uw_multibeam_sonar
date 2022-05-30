@@ -23,7 +23,8 @@ def generate_launch_description():
 
     # Gazebo Client
     gzclient_launch_file = os.path.join(pkg_gazebo_ros, 'launch', 'gzclient.launch.py')
-    gzclient_launch = IncludeLaunchDescription(PythonLaunchDescriptionSource(gzclient_launch_file))
+    gzclient_launch = IncludeLaunchDescription(PythonLaunchDescriptionSource(gzclient_launch_file), launch_arguments={
+            'verbose': 'true'}.items())
     
     # Static transform publisher
     static_tf_node = Node(
@@ -36,6 +37,9 @@ def generate_launch_description():
     # Image viewer from sonar image
     image_view_sonar_node = Node(
         package="image_view",
+        remappings=[
+                 ('image', '/sonar_image'),
+             ],
         arguments=["--ros-args --remap image:=/sonar_image"],
         parameters=[{"window_name": "blueview_p900", "autosize": True, "filename_format": "/tmp/SonarImage_capture_%04i.jpg"}],
         executable="image_view",

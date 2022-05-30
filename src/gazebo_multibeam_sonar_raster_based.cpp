@@ -575,10 +575,6 @@ void NpsGazeboRosMultibeamSonar::OnNewDepthFrame(const float *_image,
     return;
 
   this->depth_sensor_update_time_ = this->parentSensor->LastMeasurementTime();  
-  this->width = this->depthCamera->ImageWidth();
-  this->height = this->depthCamera->ImageHeight();
-  this->depth = this->depthCamera->ImageDepth();
-  this->format = this->depthCamera->ImageFormat();
 
   if (this->parentSensor->IsActive())
   {
