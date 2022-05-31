@@ -539,8 +539,6 @@ namespace NpsGazeboSonar
     cudaMallocHost((void **)&beamCorrector_lin, beamCorrector_lin_Bytes);
     SAFE_CALL(cudaMalloc((void **)&d_beamCorrector_lin, beamCorrector_lin_Bytes), "CUDA Malloc Failed");
 
-    printf("Malloc declaration passed\n");
-
     // (nfreq x nBeams) * (nBeams x nBeams) = (nfreq x nBeams)
     for (size_t beam = 0; beam < nBeams; beam ++)
     {
@@ -552,8 +550,6 @@ namespace NpsGazeboSonar
       for (size_t beam_other = 0; beam_other < nBeams; beam_other ++)
         beamCorrector_lin[beam_other * nBeams + beam] = beamCorrector[beam][beam_other];
     }
-
-    printf("Malloc assignation passed\n");
 
     SAFE_CALL(cudaMemcpy(d_P_Beams_Cor_real, P_Beams_Cor_real, P_Beams_Cor_Bytes,
                          cudaMemcpyHostToDevice),

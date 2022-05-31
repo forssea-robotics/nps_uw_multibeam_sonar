@@ -471,7 +471,7 @@ void NpsGazeboRosMultibeamSonar::Load(sensors::SensorPtr _parent,
 
   // Get debug flag for computation time display
   if (!_sdf->HasElement("debugFlag"))
-    this->debugFlag = true;
+    this->debugFlag = false;
   else
     this->debugFlag =
       _sdf->GetElement("debugFlag")->Get<bool>();
@@ -570,7 +570,7 @@ void NpsGazeboRosMultibeamSonar::OnNewDepthFrame(const float *_image,
                                              unsigned int _depth,
                                              const std::string &_format)
 {
-  std::cout<<"on new depth frame event callback"<<std::endl;
+  // std::cout<<"on new depth frame event callback"<<std::endl;
   if (!rclcpp::ok() || this->height <=0 || this->width <=0)
     return;
 
@@ -578,7 +578,7 @@ void NpsGazeboRosMultibeamSonar::OnNewDepthFrame(const float *_image,
 
   if (this->parentSensor->IsActive())
   {
-    std::cout<<"parent is active"<<std::endl;
+    // std::cout<<"parent is active"<<std::endl;
 
     // Deactivate if no subscribers
     this->image_connect_count_ = this->ros_node_->count_publishers(this->image_topic_name_);
@@ -600,7 +600,7 @@ void NpsGazeboRosMultibeamSonar::OnNewDepthFrame(const float *_image,
     }
     else
     {
-      std::cout<<"compute point cloud and sonar image"<<std::endl;
+      // std::cout<<"compute point cloud and sonar image"<<std::endl;
 
       this->ComputePointCloud(_image);
 
@@ -625,7 +625,7 @@ void NpsGazeboRosMultibeamSonar::OnNewImageFrame(const unsigned char *_image,
                                              unsigned int _depth,
                                              const std::string &_format)
 {
-  std::cout<<"on new image frame event callback"<<std::endl;
+  // std::cout<<"on new image frame event callback"<<std::endl;
   if (!rclcpp::ok() || this->height <=0 || this->width <=0)
     return;
 
@@ -803,7 +803,7 @@ void NpsGazeboRosMultibeamSonar::OnNewImageFrame(const unsigned char *_image,
 // Most of the plugin work happens here
 void NpsGazeboRosMultibeamSonar::ComputeSonarImage(const float *_src)
 {
-  std::cout<<"Compute sonar image function"<<std::endl;
+  // std::cout<<"Compute sonar image function"<<std::endl;
 
   this->lock_.lock();
   cv::Mat depth_image = this->point_cloud_image_;
@@ -812,13 +812,6 @@ void NpsGazeboRosMultibeamSonar::ComputeSonarImage(const float *_src)
   double hFOV = this->parentSensor->DepthCamera()->HFOV().Radian();
   double vPixelSize = vFOV / this->height;
   double hPixelSize = hFOV / this->width;
-
-  std::cout<<"Done initiating necessary data"<<std::endl;
-  std::cout<<vFOV<<std::endl;
-  std::cout<<hFOV<<std::endl;
-  std::cout<<this->height<<std::endl;
-  std::cout<<this->width<<std::endl;
-
 
   if (this->beamCorrectorSum == 0)
     ComputeCorrector();
@@ -923,8 +916,6 @@ void NpsGazeboRosMultibeamSonar::ComputeSonarImage(const float *_src)
       this->writeNumber = this->writeNumber + 1;
     }
   }
-
-  std::cout<<"Before creating sonar image ROS msg"<<std::endl;
 
   // Sonar image ROS msg
   this->sonar_image_raw_msg_.header.frame_id
@@ -1068,9 +1059,7 @@ void NpsGazeboRosMultibeamSonar::ComputeSonarImage(const float *_src)
                                   depth_image);
   // from cv_bridge to sensor_msgs::Image
   img_bridge.toImageMsg(this->depth_image_msg_);
-  std::cout<<"PUBLISHING DEPTH IMAGE"<<std::endl;
   this->depth_image_pub_->publish(this->depth_image_msg_);
-  std::cout<<"DONE PUBLISHING DEPTH IMAGE"<<std::endl;
 
 
   // Normal image
@@ -1095,7 +1084,7 @@ void NpsGazeboRosMultibeamSonar::ComputeSonarImage(const float *_src)
 
 void NpsGazeboRosMultibeamSonar::ComputePointCloud(const float *_src)
 {
-  std::cout<<"Compute point cloud function"<<std::endl;
+  // std::cout<<"Compute point cloud function"<<std::endl;
 
   this->lock_.lock();
 
@@ -1204,8 +1193,6 @@ void NpsGazeboRosMultibeamSonar::ComputePointCloud(const float *_src)
   }
   if (this->point_cloud_connect_count_ > 0)
     this->point_cloud_pub_->publish(this->point_cloud_msg_);
-
-  std::cout<<"done publishing point cloud"<<std::endl;
 
   this->lock_.unlock();
 }

@@ -119,7 +119,6 @@ void NpsGazeboRosMultibeamSonarRay::Load(sensors::SensorPtr _sensor,
 
   this->width = this->parentSensor->RangeCount();
   this->height = this->parentSensor->VerticalRangeCount();
-  std::cout<<"width = "<<this->width<<" height = "<<this->height<<std::endl;
   // this->format = this->laserCamera->ImageFormat();
   this->format = "R8G8B8";
   this->newLaserFrameConnection = this->laserCamera->ConnectNewLaserFrame(
@@ -376,7 +375,7 @@ void NpsGazeboRosMultibeamSonarRay::OnNewLaserFrame(const float *_image,
     unsigned int _width, unsigned int _height,
     unsigned int _depth, const std::string &_format)
 {
-  std::cout<<"OnNewLaserFrame"<<std::endl;
+  // std::cout<<"OnNewLaserFrame"<<std::endl;
   this->sensor_update_time_ = this->parentSensor->LastMeasurementTime();
   this->sonar_image_connect_count_ = 
   this->ros_node_->count_publishers(sonar_image_topic_name_) +
@@ -400,7 +399,7 @@ void NpsGazeboRosMultibeamSonarRay::OnNewLaserFrame(const float *_image,
 void NpsGazeboRosMultibeamSonarRay::ComputeSonarImage()
 {
   this->lock_.lock();
-  std::cout<<"ComputeSonarImage"<<std::endl;
+  // std::cout<<"ComputeSonarImage"<<std::endl;
 
   cv::Mat depth_image = this->point_cloud_image_;
   cv::Mat normal_image = this->ComputeNormalImage(depth_image);
@@ -658,14 +657,9 @@ void NpsGazeboRosMultibeamSonarRay::ComputeSonarImage()
 void NpsGazeboRosMultibeamSonarRay::UpdatePointCloud(const sensor_msgs::msg::PointCloud2::SharedPtr _msg)
 {
   this->lock_.lock();
-  std::cout<<"UpdatePointCloud"<<std::endl;
-  std::cout<<_msg->height<<std::endl;
-  std::cout<<_msg->width<<std::endl;
-  std::cout<<_msg->point_step<<std::endl;
+  // std::cout<<"UpdatePointCloud"<<std::endl;
   pcl::PointCloud<pcl::PointXYZI>::Ptr pcl_pointcloud(new pcl::PointCloud<pcl::PointXYZI>);
   pcl::fromROSMsg(*_msg,*pcl_pointcloud);
-
-  std::cout<<"fromROSmsg OK"<<std::endl;
 
   this->point_cloud_image_.create(this->height, this->width, CV_32FC1);
   cv::MatIterator_<float> iter_image = this->point_cloud_image_.begin<float>();
@@ -716,7 +710,7 @@ void NpsGazeboRosMultibeamSonarRay::UpdatePointCloud(const sensor_msgs::msg::Poi
 // Precalculation of corrector sonar calculation
 void NpsGazeboRosMultibeamSonarRay::ComputeCorrector()
 {
-  std::cout<<"ComputeCorrector"<<std::endl;
+  // std::cout<<"ComputeCorrector"<<std::endl;
   double hFOV = this->parentSensor->HorzFOV();
   double hPixelSize = hFOV / (this->width-1);
   // Beam culling correction precalculation
@@ -737,7 +731,7 @@ void NpsGazeboRosMultibeamSonarRay::ComputeCorrector()
 /////////////////////////////////////////////////
 cv::Mat NpsGazeboRosMultibeamSonarRay::ComputeNormalImage(cv::Mat& depth)
 {
-  std::cout<<"ComputeNormalImage"<<std::endl;
+  // std::cout<<"ComputeNormalImage"<<std::endl;
   
   // filters
   cv::Mat_<float> f1 = (cv::Mat_<float>(3, 3) << 1,  2,  1,
