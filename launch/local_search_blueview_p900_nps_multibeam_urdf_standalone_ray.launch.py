@@ -82,7 +82,6 @@ def generate_launch_description():
         remappings=[
                  ('image', params['sonar_image_topic']),
              ],
-        arguments=["--ros-args --remap image:=/" + params['sonar_image_topic']],
         parameters=[{"window_name": params['sonar_name'], "autosize": True, "filename_format": "/tmp/SonarImage_capture_%04i.jpg"}],
         executable="image_view",
         output="screen",
