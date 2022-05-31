@@ -126,48 +126,50 @@ int main (int argc, char *argv[])
 
   cv::Mat reflectivityImage = cv::Mat(width, height, CV_32FC1, cv::Scalar(mu));
 
-  // For calc time measure
-  auto start = std::chrono::high_resolution_clock::now();
-  // ------------------------------------------------//
-  // --------      Sonar calculations       -------- //
-  // ------------------------------------------------//
-  CArray2D P_Beams = NpsGazeboSonar::sonar_calculation_wrapper(
-                  depth_image,   // cv::Mat& depth_image
-                  normal_image,  // cv::Mat& normal_image
-                  rand_image,    // cv::Mat& rand_image
-                  hPixelSize,    // hPixelSize
-                  vPixelSize,    // vPixelSize
-                  hFOV,          // hFOV
-                  vFOV,          // VFOV
-                  hPixelSize,    // _beam_azimuthAngleWidth
-                  verticalFOV/180*M_PI,  // _beam_elevationAngleWidth
-                  hPixelSize,    // _ray_azimuthAngleWidth
-                  elevation_angles, // _ray_elevationAngles
-                  vPixelSize*(raySkips+1),  // _ray_elevationAngleWidth
-                  soundSpeed,    // _soundSpeed
-                  maxDistance,   // _maxDistance
-                  sourceLevel,   // _sourceLevel
-                  nBeams,        // _nBeams
-                  nRays,         // _nRays
-                  raySkips,      // _raySkips
-                  sonarFreq,     // _sonarFreq
-                  bandwidth,     // _bandwidth
-                  nFreq,         // _nFreq
-                  reflectivityImage,  // reflectivity_image
-                  attenuation,   // _attenuation
-                  window,        // _window
-                  beamCorrector,      // _beamCorrector
-                  beamCorrectorSum,   // _beamCorrectorSum
-                  debugFlag);
-  
-  // For calc time measure
-  auto stop = std::chrono::high_resolution_clock::now();
-  auto duration = std::chrono::duration_cast<
-                  std::chrono::microseconds>(stop - start);
-  if (debugFlag)
-  {
-    // std::cout <<"GPU Sonar Frame Calc Time " <<
-    //                 duration.count()/10000 << "/100 [s]\n"<<std::endl;
+  while(1){
+    // For calc time measure
+    auto start = std::chrono::high_resolution_clock::now();
+    // ------------------------------------------------//
+    // --------      Sonar calculations       -------- //
+    // ------------------------------------------------//
+    CArray2D P_Beams = NpsGazeboSonar::sonar_calculation_wrapper(
+                    depth_image,   // cv::Mat& depth_image
+                    normal_image,  // cv::Mat& normal_image
+                    rand_image,    // cv::Mat& rand_image
+                    hPixelSize,    // hPixelSize
+                    vPixelSize,    // vPixelSize
+                    hFOV,          // hFOV
+                    vFOV,          // VFOV
+                    hPixelSize,    // _beam_azimuthAngleWidth
+                    verticalFOV/180*M_PI,  // _beam_elevationAngleWidth
+                    hPixelSize,    // _ray_azimuthAngleWidth
+                    elevation_angles, // _ray_elevationAngles
+                    vPixelSize*(raySkips+1),  // _ray_elevationAngleWidth
+                    soundSpeed,    // _soundSpeed
+                    maxDistance,   // _maxDistance
+                    sourceLevel,   // _sourceLevel
+                    nBeams,        // _nBeams
+                    nRays,         // _nRays
+                    raySkips,      // _raySkips
+                    sonarFreq,     // _sonarFreq
+                    bandwidth,     // _bandwidth
+                    nFreq,         // _nFreq
+                    reflectivityImage,  // reflectivity_image
+                    attenuation,   // _attenuation
+                    window,        // _window
+                    beamCorrector,      // _beamCorrector
+                    beamCorrectorSum,   // _beamCorrectorSum
+                    debugFlag);
+    
+    // For calc time measure
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<
+                    std::chrono::microseconds>(stop - start);
+    if (debugFlag)
+    {
+      std::cout <<"GPU Sonar Frame Calc Time " <<
+                      duration.count()/10000 << "/100 [s]\n"<<std::endl;
+    }
   }
 
   return EXIT_SUCCESS;

@@ -87,6 +87,8 @@ NpsGazeboRosMultibeamSonarRay::~NpsGazeboRosMultibeamSonarRay()
 void NpsGazeboRosMultibeamSonarRay::Load(sensors::SensorPtr _sensor,
                               sdf::ElementPtr _sdf)
 {
+  clock_t start_timer = clock();
+
   // Get tf frame for output
   this->frame_name_ = gazebo_ros::SensorFrameID(*_sensor, *_sdf);
 
@@ -342,32 +344,9 @@ void NpsGazeboRosMultibeamSonarRay::Load(sensors::SensorPtr _sensor,
 
   this->VelodyneGpuLaserPointCloud = this->ros_node_->create_subscription<sensor_msgs::msg::PointCloud2>(
       this->point_cloud_topic_name_, qos, std::bind(&NpsGazeboRosMultibeamSonarRay::UpdatePointCloud, this, std::placeholders::_1));
-}
-
-void NpsGazeboRosMultibeamSonarRay::PointCloudConnect()
-{
-  this->point_cloud_connect_count_++;
-  this->parentSensor->SetActive(true);
-}
-
-void NpsGazeboRosMultibeamSonarRay::PointCloudDisconnect()
-{
-  this->point_cloud_connect_count_--;
-  if (this->point_cloud_connect_count_ <= 0)
-    this->parentSensor->SetActive(false);
-}
-
-void NpsGazeboRosMultibeamSonarRay::SonarImageConnect()
-{
-  this->sonar_image_connect_count_++;
-  this->parentSensor->SetActive(true);
-}
-
-void NpsGazeboRosMultibeamSonarRay::SonarImageDisconnect()
-{
-  this->sonar_image_connect_count_--;
-  if (this->sonar_image_connect_count_ <= 0)
-    this->parentSensor->SetActive(false);
+  
+  clock_t end_timer = clock();
+  std::cout<<"Load function: "<<((float) end_timer - start_timer)*1000/CLOCKS_PER_SEC<<"msec\n";
 }
 
 /////////////////////////////////////////////////
@@ -375,6 +354,8 @@ void NpsGazeboRosMultibeamSonarRay::OnNewLaserFrame(const float *_image,
     unsigned int _width, unsigned int _height,
     unsigned int _depth, const std::string &_format)
 {
+  clock_t start_timer = clock();
+
   // std::cout<<"OnNewLaserFrame"<<std::endl;
   this->sensor_update_time_ = this->parentSensor->LastMeasurementTime();
   this->sonar_image_connect_count_ = 
@@ -392,12 +373,16 @@ void NpsGazeboRosMultibeamSonarRay::OnNewLaserFrame(const float *_image,
     if (this->sonar_image_connect_count_ > 0)
       this->parentSensor->SetActive(true);
   }
+  clock_t end_timer = clock();
+  std::cout<<"OnNewLaserFrame function: "<<((float) end_timer - start_timer)*1000/CLOCKS_PER_SEC<<"msec\n";
 }
 
 /////////////////////////////////////////////////
 // Most of the plugin work happens here
 void NpsGazeboRosMultibeamSonarRay::ComputeSonarImage()
 {
+  clock_t start_timer = clock();
+
   this->lock_.lock();
   // std::cout<<"ComputeSonarImage"<<std::endl;
 
@@ -651,11 +636,15 @@ void NpsGazeboRosMultibeamSonarRay::ComputeSonarImage()
   this->normal_image_pub_->publish(this->normal_image_msg_);
 
   this->lock_.unlock();
+  clock_t end_timer = clock();
+  std::cout<<"ComputeSonarImage function: "<<((float) end_timer - start_timer)*1000/CLOCKS_PER_SEC<<"msec\n";
 }
 
 /////////////////////////////////////////////////
 void NpsGazeboRosMultibeamSonarRay::UpdatePointCloud(const sensor_msgs::msg::PointCloud2::SharedPtr _msg)
 {
+  clock_t start_timer = clock();
+
   this->lock_.lock();
   // std::cout<<"UpdatePointCloud"<<std::endl;
   pcl::PointCloud<pcl::PointXYZI>::Ptr pcl_pointcloud(new pcl::PointCloud<pcl::PointXYZI>);
@@ -698,18 +687,22 @@ void NpsGazeboRosMultibeamSonarRay::UpdatePointCloud(const sensor_msgs::msg::Poi
         *iter_image = 100000.0;
     }
   }
-  this->point_cloud_connect_count_ = 
-  this->ros_node_->count_publishers(point_cloud_topic_name_);
+  // this->point_cloud_connect_count_ = 
+  // this->ros_node_->count_publishers(point_cloud_topic_name_);
   // if (this->point_cloud_connect_count_ > 0)
   //   this->point_cloud_pub_->publish(this->point_cloud_msg_);
 
   this->lock_.unlock();
+  clock_t end_timer = clock();
+  std::cout<<"UpdatePointCloud function: "<<((float) end_timer - start_timer)*1000/CLOCKS_PER_SEC<<"msec\n";
 }
 
 /////////////////////////////////////////////////
 // Precalculation of corrector sonar calculation
 void NpsGazeboRosMultibeamSonarRay::ComputeCorrector()
 {
+  clock_t start_timer = clock();
+
   // std::cout<<"ComputeCorrector"<<std::endl;
   double hFOV = this->parentSensor->HorzFOV();
   double hPixelSize = hFOV / (this->width-1);
@@ -726,11 +719,14 @@ void NpsGazeboRosMultibeamSonarRay::ComputeCorrector()
     }
   }
   this->beamCorrectorSum = sqrt(this->beamCorrectorSum);
+  clock_t end_timer = clock();
+  std::cout<<"ComputeCorrector function: "<<((float) end_timer - start_timer)*1000/CLOCKS_PER_SEC<<"msec\n";
 }
 
 /////////////////////////////////////////////////
 cv::Mat NpsGazeboRosMultibeamSonarRay::ComputeNormalImage(cv::Mat& depth)
 {
+  clock_t start_timer = clock();
   // std::cout<<"ComputeNormalImage"<<std::endl;
   
   // filters
@@ -780,7 +776,8 @@ cv::Mat NpsGazeboRosMultibeamSonarRay::ComputeNormalImage(cv::Mat& depth)
       float& d = depth.at<float>(i, j);
     }
   }
-
+  clock_t end_timer = clock();
+  std::cout<<"ComputeNormalImage function: "<<((float) end_timer - start_timer)*1000/CLOCKS_PER_SEC<<"msec\n";
   return normal_image;
 }
 

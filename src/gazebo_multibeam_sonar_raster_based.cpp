@@ -41,6 +41,9 @@
 #include <vector>
 #include <limits>
 
+#include <iostream>
+#include <chrono>
+
 namespace gazebo
 {
 
@@ -87,6 +90,8 @@ NpsGazeboRosMultibeamSonar::~NpsGazeboRosMultibeamSonar()
 void NpsGazeboRosMultibeamSonar::Load(sensors::SensorPtr _parent,
                                   sdf::ElementPtr _sdf)
 {
+  clock_t start_timer = clock();
+  
   // Get tf frame for output
   this->frame_name_ = gazebo_ros::SensorFrameID(*_parent, *_sdf);
 
@@ -471,7 +476,7 @@ void NpsGazeboRosMultibeamSonar::Load(sensors::SensorPtr _parent,
 
   // Get debug flag for computation time display
   if (!_sdf->HasElement("debugFlag"))
-    this->debugFlag = false;
+    this->debugFlag = true;
   else
     this->debugFlag =
       _sdf->GetElement("debugFlag")->Get<bool>();
@@ -540,6 +545,9 @@ void NpsGazeboRosMultibeamSonar::Load(sensors::SensorPtr _parent,
 
   this->sonar_image_pub_ = this->ros_node_->create_publisher<sensor_msgs::msg::Image>(
     this->sonar_image_topic_name_, qos);
+
+  clock_t end_timer = clock();
+  std::cout<<"Load function: "<<((float) end_timer - start_timer)*1000/CLOCKS_PER_SEC<<" msec\n";
 }
 
 void NpsGazeboRosMultibeamSonar::PopulateFiducials()
@@ -570,6 +578,8 @@ void NpsGazeboRosMultibeamSonar::OnNewDepthFrame(const float *_image,
                                              unsigned int _depth,
                                              const std::string &_format)
 {
+  clock_t start_timer = clock();
+  
   // std::cout<<"on new depth frame event callback"<<std::endl;
   if (!rclcpp::ok() || this->height <=0 || this->width <=0)
     return;
@@ -615,6 +625,9 @@ void NpsGazeboRosMultibeamSonar::OnNewDepthFrame(const float *_image,
       this->parentSensor->SetActive(true);
   }
   this->PublishCameraInfo();
+
+  clock_t end_timer = clock();
+  std::cout<<"OnNewDepthFrame function: "<<((float) end_timer - start_timer)*1000/CLOCKS_PER_SEC<<"msec\n";
 }
 
 
@@ -625,6 +638,8 @@ void NpsGazeboRosMultibeamSonar::OnNewImageFrame(const unsigned char *_image,
                                              unsigned int _depth,
                                              const std::string &_format)
 {
+  clock_t start_timer = clock();
+
   // std::cout<<"on new image frame event callback"<<std::endl;
   if (!rclcpp::ok() || this->height <=0 || this->width <=0)
     return;
@@ -798,11 +813,15 @@ void NpsGazeboRosMultibeamSonar::OnNewImageFrame(const unsigned char *_image,
     }  // end of variational reflectivity calculation
   }  // end of variational reflectivity bool
 
+  clock_t end_timer = clock();
+  std::cout<<"OnNewImageFrame function: "<<((float) end_timer - start_timer)*1000/CLOCKS_PER_SEC<<"msec\n";
+          
 }
 
 // Most of the plugin work happens here
 void NpsGazeboRosMultibeamSonar::ComputeSonarImage(const float *_src)
 {
+  clock_t start_timer = clock();
   // std::cout<<"Compute sonar image function"<<std::endl;
 
   this->lock_.lock();
@@ -1079,11 +1098,16 @@ void NpsGazeboRosMultibeamSonar::ComputeSonarImage(const float *_src)
   this->normal_image_pub_->publish(this->normal_image_msg_);
 
   this->lock_.unlock();
+
+  clock_t end_timer = clock();
+  std::cout<<"ComputeSonarImage function: "<<((float) end_timer - start_timer)*1000/CLOCKS_PER_SEC<<"msec\n";
+
 }
 
 
 void NpsGazeboRosMultibeamSonar::ComputePointCloud(const float *_src)
 {
+  clock_t start_timer = clock();
   // std::cout<<"Compute point cloud function"<<std::endl;
 
   this->lock_.lock();
@@ -1195,12 +1219,17 @@ void NpsGazeboRosMultibeamSonar::ComputePointCloud(const float *_src)
     this->point_cloud_pub_->publish(this->point_cloud_msg_);
 
   this->lock_.unlock();
+
+  clock_t end_timer = clock();
+  std::cout<<"ComputePointCloud function: "<<((float) end_timer - start_timer)*1000/CLOCKS_PER_SEC<<"msec\n";
 }
 
 /////////////////////////////////////////////////
 // Precalculation of corrector sonar calculation
 void NpsGazeboRosMultibeamSonar::ComputeCorrector()
 {
+  clock_t start_timer = clock();
+
   double hFOV = this->parentSensor->DepthCamera()->HFOV().Radian();
   double hPixelSize = hFOV / this->width;
   double fl = static_cast<double>(width) / (2.0 * tan(hFOV/2.0));
@@ -1221,11 +1250,16 @@ void NpsGazeboRosMultibeamSonar::ComputeCorrector()
     }
   }
   this->beamCorrectorSum = sqrt(this->beamCorrectorSum);
+
+  clock_t end_timer = clock();
+  std::cout<<"ComputeCorrector function: "<<((float) end_timer - start_timer)*1000/CLOCKS_PER_SEC<<"msec\n";
 }
 
 /////////////////////////////////////////////////
 cv::Mat NpsGazeboRosMultibeamSonar::ComputeNormalImage(cv::Mat& depth)
 {
+  clock_t start_timer = clock();
+
   // filters
   cv::Mat_<float> f1 = (cv::Mat_<float>(3, 3) << 1,  2,  1,
                                                  0,  0,  0,
@@ -1273,6 +1307,8 @@ cv::Mat NpsGazeboRosMultibeamSonar::ComputeNormalImage(cv::Mat& depth)
       float& d = depth.at<float>(i, j);
     }
   }
+  clock_t end_timer = clock();
+  std::cout<<"ComputeNormalImage function: "<<((float) end_timer - start_timer)*1000/CLOCKS_PER_SEC<<"msec\n";
   return normal_image;
 }
 
@@ -1280,6 +1316,8 @@ cv::Mat NpsGazeboRosMultibeamSonar::ComputeNormalImage(cv::Mat& depth)
 /////////////////////////////////////////////////
 void NpsGazeboRosMultibeamSonar::PublishCameraInfo()
 {
+  clock_t start_timer = clock();
+
   RCLCPP_DEBUG_STREAM(this->ros_node_->get_logger(), "publishing default camera info, then depth camera info");
   // GazeboRosCamera::PublishCameraInfo();
 
@@ -1403,6 +1441,8 @@ void NpsGazeboRosMultibeamSonar::PublishCameraInfo()
       this->last_depth_image_camera_info_update_time_ = sensor_update_time;
     }
   }
+  clock_t end_timer = clock();
+  std::cout<<"PublishCameraInfo function: "<<((float) end_timer - start_timer)*1000/CLOCKS_PER_SEC<<"msec\n";
 }
 
 }
