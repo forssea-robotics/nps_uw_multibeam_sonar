@@ -5,7 +5,11 @@ A ROS2 migration of the [nps_uw_multibeam_sonar package](https://github.com/Fiel
 * ROS2 Galactic
 * Gazebo 11
 * NVIDIA GPU with at least 4GB memory
-* NVIDIA CUDA Toolkit 11.7 (installation guide [here](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html) and architecture compatibility [here](https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html))
+* NVIDIA CUDA Toolkit(installation guide [here](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html) and architecture compatibility [here](https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html))
+
+This plugin was developed and tested using:
+* CUDA 11.7
+* NVIDIA driver 515.43.04
 
 # Dependencies
 
