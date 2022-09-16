@@ -21,4 +21,5 @@ This plugin was developed and tested using:
 Multibeam sonar Gazebo plugin with NVIDIA Cuda library 
 
 # Wiki
+All the command lines are the same as ROS1 but with the ROS2 key words.
 https://github.com/Field-Robotics-Lab/dave/wiki/Multibeam-Forward-Looking-Sonar
