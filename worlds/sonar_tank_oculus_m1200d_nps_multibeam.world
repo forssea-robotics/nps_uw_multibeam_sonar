@@ -15,12 +15,12 @@
     </gui>
 
     <!-- basement tank -->
-    <include>
+    <!--<include>
       <uri>model://cylinder_sonar_tank</uri>
       <name>cylinder_sonar_tank</name>
       <pose>0 0 0 0 0 0</pose>
       <static>true</static>
-    </include>
+    </include>-->
 
     <!-- vertical cylinder target -->
     <!-- <include>
@@ -53,6 +53,31 @@
       <pose>0 -0.50 0.6 0 -0.1 1.5709</pose>
       <static>true</static>
     </include>
-
+    
+    <plugin name="gazebo_ros_state" filename="libgazebo_ros_state.so">
+        <update_rate>1.6</update_rate>
+    </plugin>
+    
+  <!--<actor name="oculus_m1200d">
+        <include>
+            <uri>model://oculus_m1200d_nps_multibeam</uri>
+        </include>
+        <script>
+            <loop>true</loop>
+            <delay_start>0.000</delay_start>
+            <auto_start>true</auto_start>
+            <trajectory id="0" type="ha">
+                <waypoint>
+                    <time>0.0</time>
+                    <pose>0 -0.50 0.6 2 -0.1 1.5709</pose>
+                </waypoint>
+                <waypoint>
+                    <time>100.0</time>
+                    <pose>0 -0.50 0.6 3 -0.1 1.5709</pose>
+                </waypoint>                
+            </trajectory>
+        </script>
+    </actor> -->
   </world>
 </sdf>
+

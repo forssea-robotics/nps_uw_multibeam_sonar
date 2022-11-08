@@ -32,6 +32,8 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(OpenCV REQUIRED)
+find_package(image_transport REQUIRED)
+list(APPEND TARGET_DEPENDENCIES image_transport)
 
 find_package(PCL REQUIRED)
 include_directories(${PCL_INCLUDE_DIRS})
@@ -135,6 +137,21 @@ list(APPEND SENSOR_ROS_PLUGINS_LIST nps_multibeam_sonar_ray_ros_plugin)
 
 ament_lint_auto_find_test_dependencies()
 
+#add_library(sonar_move SHARED src/Sonar_move.cpp)
+#target_link_libraries(sonar_move ${GAZEBO_LIBRARIES})
+add_executable(sonar_move
+    src/Sonar_move.cpp
+)
+
+ament_target_dependencies(sonar_move
+  rclcpp
+  gazebo_msgs
+  geometry_msgs
+)
+install(TARGETS 
+sonar_move
+DESTINATION lib/${PROJECT_NAME})
+
 # Install plugins
 install(
         DIRECTORY include/
@@ -162,3 +179,10 @@ ament_export_dependencies(
   acoustic_msgs
 )
 ament_package()
+
+
+
+
+
+
+

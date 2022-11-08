@@ -34,15 +34,22 @@ def generate_launch_description():
     )
 
     # Image viewer from sonar image
-    image_view_sonar_node = Node(
-        package="image_view",
-        remappings=[
-                 ('image', 'sonar_image'),
-             ],
-        parameters=[{"window_name": "oculus_m1200d", "autosize": True, "filename_format": "/tmp/SonarImage_capture_%04i.jpg", "gui": True}],
-        executable="image_view",
-        output="screen",
-        name="image_view_sonar"
+    #image_view_sonar_node = Node(
+    #    package="image_view",
+    #    remappings=[
+    #             ('image', 'sonar_image'),
+    #         ],
+    #    parameters=[{"window_name": "oculus_m1200d", "autosize": True, "filename_format": "/tmp/SonarImage_capture_%04i.jpg", "gui": True}],
+    #    executable="image_view",
+    #    output="screen",
+    #    name="image_view_sonar"
+    #)
+    
+    #
+    pose_image_subscriber = Node(
+        package="nps_uw_multibeam_sonar",
+        executable="sonar_move",
+        name="sonar_move"
     )
     
     return LaunchDescription([
@@ -55,5 +62,6 @@ def generate_launch_description():
         gzserver_launch, 
         gzclient_launch, 
         static_tf_node,
-        image_view_sonar_node
+        #image_view_sonar_node
+        pose_image_subscriber
         ])
