@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.8)
 project(nps_uw_multibeam_sonar LANGUAGES CUDA CXX)
 
 ## Make sure you have installed CUDA and include in paths
@@ -138,15 +138,17 @@ list(APPEND SENSOR_ROS_PLUGINS_LIST nps_multibeam_sonar_ray_ros_plugin)
 ament_lint_auto_find_test_dependencies()
 
 #add_library(sonar_move SHARED src/Sonar_move.cpp)
-#target_link_libraries(sonar_move ${GAZEBO_LIBRARIES})
 add_executable(sonar_move
     src/Sonar_move.cpp
 )
+target_link_libraries(sonar_move )
 
 ament_target_dependencies(sonar_move
   rclcpp
   gazebo_msgs
   geometry_msgs
+  image_transport
+  cv_bridge
 )
 install(TARGETS 
 sonar_move
@@ -177,6 +179,7 @@ ament_export_libraries(
 )
 ament_export_dependencies(
   acoustic_msgs
+  image_transport
 )
 ament_package()
 
