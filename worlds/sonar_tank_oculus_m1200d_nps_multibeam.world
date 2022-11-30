@@ -58,6 +58,26 @@
         <update_rate>1.6</update_rate>
     </plugin>
     
+  <actor name="oculus_m1200d">
+        <include>
+            <uri>model://oculus_m1200d_nps_multibeam</uri>
+        </include>
+        <script>
+            <loop>true</loop>
+            <delay_start>0.000</delay_start>
+            <auto_start>true</auto_start>
+            <trajectory id="0" type="ha">
+                <waypoint>
+                    <time>0.0</time>
+                    <pose>0 -0.50 0.6 2 -0.1 1.5709</pose>
+                </waypoint>
+                <waypoint>
+                    <time>100.0</time>
+                    <pose>0 -0.50 0.6 3 -0.1 1.5709</pose>
+                </waypoint>                
+            </trajectory>
+        </script>
+    </actor>
   </world>
 </sdf>
 
